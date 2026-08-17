@@ -1,0 +1,9 @@
+student_id,name,city,age,course,grade,_merge
+1001,Ali,Erlangen,23.0,Python,1.7,both
+1001,Ali,Erlangen,23.0,Dill,2.0,both
+1002,Sara,Nuremberg,25.0,Python,2.0,both
+1003,Reza,Erlangen,22.0,Data Science,1.3,both
+1004,Mina,Forchheim,24.0,,,left_only
+1005,Daniel,Nuremberg,26.0,Machine Learning,2.3,both
+1006,Lina,Erlangen,21.0,Python,1.0,both
+1007,,,,AI Basics,1.7,right_only
