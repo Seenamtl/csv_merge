@@ -117,21 +117,71 @@ def clean_text_column(df, column, use_title=False):
     return df
 
 
+def clean_numeric_column(df,column):
+    df = df.copy()
+    df[column] = pd.to_numeric(
+        df[column],
+        errors='coerce'
+    )
+    missing_count = df[column].isna().sum()
+    
+    print(f"Missing/invalid values in '{column}': {missing_count} ")
+    return df
 
-students = load_data("students.csv")
-courses = load_data("courses.csv")
+def handle_missing(df, column, method="median"):
+    df = df.copy()
 
-students = clean_text_column(students, "name", use_title=True)
-students = clean_text_column(students, "city", use_title=True)
-courses = clean_text_column(courses, "course")
+    if method == "drop":
+        df = df.dropna(subset=[column])
+
+    elif method == "mean":
+        df[column] = df[column].fillna(
+            df[column].mean()
+        )
+
+    elif method == "median":
+        df[column] = df[column].fillna(
+            df[column].median()
+        )
+
+    return df
+
+
+
+
+students = load_data("data/raw/students.csv")
+courses = load_data("data/raw/courses.csv")
+
 
 if students is not None and courses is not None:
 
     students = clean_key(students, "student_id")
     courses = clean_key(courses, "student_id")
-    
-    
+
+    students = clean_text_column(students, "name", use_title=True)
+    students = clean_text_column(students, "city", use_title=True)
+    courses = clean_text_column(courses, "course")
+
+    students = clean_numeric_column(students, "age")
+    courses = clean_numeric_column(courses, "grade")
+
+    students = handle_missing(
+        students,
+        "age",
+        method="median"
+    )
+
     check_data(students, courses)
+
+    students.to_csv(
+    "data/cleaned/cleaned_students.csv",
+    index=False
+)
+
+    courses.to_csv(
+    "data/cleaned/cleaned_courses.csv",
+    index=False
+)
 
     merged = merge_data(
         students,
@@ -142,6 +192,8 @@ if students is not None and courses is not None:
     if merged is not None:
         print("\nMerged data:")
         print(merged)
+
+        merged.to_csv("merged_output.csv", index=False)
 
 else:
     print("Program stopped because one or more files could not be loaded.")
