@@ -15,4 +15,4 @@ Your tasks:
 8. Find course rows whose student_id does not exist in students.
 9. Save the final LEFT JOIN as merged_students_courses.csv.
 
-Do not worry if you cannot do these yet. We will implement them together step by step.
+
