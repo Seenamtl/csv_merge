@@ -1,4 +1,18 @@
 import pandas as pd
+from pathlib import Path
+
+
+
+
+BASE_DIR = Path(__file__).resolve().parent
+
+RAW_DIR = BASE_DIR / "data" / "raw"
+CLEANED_DIR = BASE_DIR / "data" / "cleaned"
+OUTPUT_DIR = BASE_DIR / "data" / "output"
+
+CLEANED_DIR.mkdir(parents=True, exist_ok=True)
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
 
 
 def load_data(file_path):
@@ -148,10 +162,8 @@ def handle_missing(df, column, method="median"):
 
 
 
-
-students = load_data("data/raw/students.csv")
-courses = load_data("data/raw/courses.csv")
-
+students = load_data(RAW_DIR / "students.csv")
+courses = load_data(RAW_DIR / "courses.csv")
 
 if students is not None and courses is not None:
 
@@ -174,14 +186,14 @@ if students is not None and courses is not None:
     check_data(students, courses)
 
     students.to_csv(
-    "data/cleaned/cleaned_students.csv",
-    index=False
-)
+        CLEANED_DIR / "cleaned_students.csv",
+        index=False
+    )
 
     courses.to_csv(
-    "data/cleaned/cleaned_courses.csv",
-    index=False
-)
+        CLEANED_DIR / "cleaned_courses.csv",
+        index=False
+    )
 
     merged = merge_data(
         students,
@@ -193,7 +205,10 @@ if students is not None and courses is not None:
         print("\nMerged data:")
         print(merged)
 
-        merged.to_csv("merged_output.csv", index=False)
+        merged.to_csv(
+            OUTPUT_DIR / "merged_output.csv",
+            index=False
+        )
 
 else:
     print("Program stopped because one or more files could not be loaded.")
