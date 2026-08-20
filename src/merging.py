@@ -1,3 +1,5 @@
+import logging
+
 import pandas as pd
 
 
@@ -5,8 +7,12 @@ def check_merge_key(left_df, right_df, key):
     left_duplicates = left_df[key].duplicated().sum()
     right_duplicates = right_df[key].duplicated().sum()
 
-    print(f"Duplicates in left DataFrame: {left_duplicates}")
-    print(f"Duplicates in right DataFrame: {right_duplicates}")
+    logging.info(
+        f"Duplicates in left DataFrame: {left_duplicates}"
+    )
+    logging.info(
+        f"Duplicates in right DataFrame: {right_duplicates}"
+    )
 
     if left_duplicates == 0 and right_duplicates == 0:
         relationship = "one_to_one"
@@ -20,7 +26,9 @@ def check_merge_key(left_df, right_df, key):
     else:
         relationship = "many_to_many"
 
-    print(f"Relationship: {relationship}")
+    logging.info(
+        f"Merge relationship detected: {relationship}"
+    )
 
     return relationship
 
@@ -29,15 +37,22 @@ def merge_data(left_df, right_df, key, how="outer"):
     valid_merge_types = ["inner", "left", "right", "outer"]
 
     if key not in left_df.columns:
-        print(f"Error: '{key}' does not exist in the left DataFrame.")
+        logging.error(
+            f"'{key}' does not exist in the left DataFrame."
+        )
         return None
 
     if key not in right_df.columns:
-        print(f"Error: '{key}' does not exist in the right DataFrame.")
+        logging.error(
+            f"'{key}' does not exist in the right DataFrame."
+        )
         return None
 
     if how not in valid_merge_types:
-        print(f"Error: '{how}' is not a valid merge type.")
+        logging.error(
+            f"'{how}' is not a valid merge type. "
+            f"Choose from: {valid_merge_types}"
+        )
         return None
 
     relationship = check_merge_key(
@@ -45,9 +60,14 @@ def merge_data(left_df, right_df, key, how="outer"):
         right_df,
         key
     )
+
     if relationship == "many_to_many":
-        print("Warning: many-to-many relationship detected.")
-        print("Merge stopped to prevent unexpected row multiplication.")
+        logging.warning(
+            "Many-to-many relationship detected."
+        )
+        logging.warning(
+            "Merge stopped to prevent unexpected row multiplication."
+        )
         return None
 
     merged = pd.merge(
@@ -59,8 +79,10 @@ def merge_data(left_df, right_df, key, how="outer"):
         validate=relationship
     )
 
-    print(f"Rows in left DataFrame: {len(left_df)}")
-    print(f"Rows in right DataFrame: {len(right_df)}")
-    print(f"Rows after merge: {len(merged)}")
+    logging.info(
+        f"Merge completed: {len(left_df)} left rows, "
+        f"{len(right_df)} right rows, "
+        f"{len(merged)} output rows."
+    )
 
     return merged

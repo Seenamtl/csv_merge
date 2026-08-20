@@ -1,18 +1,26 @@
+import logging
+
 def check_data(students, courses):
-    print("\nStudents info:")
+    logging.info("Checking Students DataFrame.")
     students.info()
 
-    print("\nCourses info:")
+    logging.info("Checking Courses DataFrame.")
     courses.info()
 
-    print("\nMissing values in Students:")
-    print(students.isna().sum())
+    logging.info(
+        f"Missing values in Students:\n{students.isna().sum()}"
+    )
 
-    print("\nMissing values in Courses:")
-    print(courses.isna().sum())
+    logging.info(
+        f"Missing values in Courses:\n{courses.isna().sum()}"
+    )
 
-    print("\nDuplicate student_id in Students:")
-    print(students["student_id"].duplicated().sum())
+    logging.info(
+        "Duplicate student_id in Students: "
+        f"{students['student_id'].duplicated().sum()}"
+    )
 
-    print("\nDuplicate student_id in Courses:")
-    print(courses["student_id"].duplicated().sum())
+    logging.info(
+        "Duplicate student_id in Courses: "
+        f"{courses['student_id'].duplicated().sum()}"
+    )
