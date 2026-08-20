@@ -1,18 +1,60 @@
-Stage 1 - CSV Reading and Merge
+# CSV Data Cleaning & Merge Pipeline
 
-Files:
-- students.csv
-- courses.csv
+A small Python project for practicing a structured data-processing workflow with Pandas.
 
-Your tasks:
-1. Read both CSV files with pandas.
-2. Print the first 5 rows of each DataFrame.
-3. Inspect columns, data types, and number of rows.
-4. Merge the two tables using student_id.
-5. First perform an INNER JOIN.
-6. Then perform a LEFT JOIN from students to courses.
-7. Find students without a matching course.
-8. Find course rows whose student_id does not exist in students.
-9. Save the final LEFT JOIN as merged_students_courses.csv.
+## Features
 
+* Load CSV files
+* Handle missing input files
+* Clean merge keys
+* Clean text columns
+* Convert numeric columns safely
+* Handle missing values
+* Detect duplicate merge keys
+* Detect merge relationships:
 
+  * one-to-one
+  * one-to-many
+  * many-to-one
+  * many-to-many
+* Prevent unexpected many-to-many merges
+* Validate Pandas merges
+* Save cleaned and merged datasets
+* Organize raw, cleaned, and output data separately
+
+## Project Structure
+
+```text
+stage1_csv_merge/
+│
+├── data/
+│   ├── raw/
+│   ├── cleaned/
+│   └── output/
+│
+├── src/
+│   ├── loading.py
+│   ├── cleaning.py
+│   └── merging.py
+│
+├── main.py
+├── .gitignore
+└── README.md
+```
+
+## Requirements
+
+* Python
+* Pandas
+
+## Run
+
+Activate the virtual environment and run:
+
+```bash
+python main.py
+```
+
+## Current Learning Goals
+
+This project is part of my Python and data-processing practice, focusing on writing reusable, modular, and reliable code.
