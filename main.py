@@ -11,6 +11,15 @@ from src.cleaning import (
 from src.merging import merge_data
 from src.validation import check_data
 
+from config import (
+    STUDENTS_FILE,
+    COURSES_FILE,
+    MERGE_KEY,
+    MERGE_TYPE,
+    AGE_MISSING_METHOD
+)
+
+from src.saving import save_data
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -43,8 +52,8 @@ logging.basicConfig(
 def main():
     logging.info("Data pipeline started.")
 
-    students = load_data(RAW_DIR / "students.csv")
-    courses = load_data(RAW_DIR / "courses.csv")
+    students = load_data(RAW_DIR / STUDENTS_FILE)
+    courses = load_data(RAW_DIR / COURSES_FILE)
 
     if students is None or courses is None:
         logging.error(
@@ -52,8 +61,8 @@ def main():
         )
         return
 
-    students = clean_key(students, "student_id")
-    courses = clean_key(courses, "student_id")
+    students = clean_key(students, MERGE_KEY)
+    courses = clean_key(courses, MERGE_KEY) 
 
     students = clean_text_column(
         students,
@@ -83,9 +92,10 @@ def main():
     )
 
     students = handle_missing(
-        students,
-        "age",
-        method="median"
+    students,
+    "age",
+    method=AGE_MISSING_METHOD
+
     )
 
     check_data(
@@ -93,20 +103,23 @@ def main():
         courses
     )
 
-    students.to_csv(
-        CLEANED_DIR / "cleaned_students.csv",
-        index=False
+    save_data(
+    students,
+    CLEANED_DIR / "cleaned_students.csv"
+
     )
 
-    courses.to_csv(
-        CLEANED_DIR / "cleaned_courses.csv",
-        index=False
+    save_data(
+    courses,
+    CLEANED_DIR / "cleaned_courses.csv"
     )
 
     merged = merge_data(
-        students,
-        courses,
-        "student_id"
+    students,
+    courses,
+    MERGE_KEY,
+    how=MERGE_TYPE
+
     )
 
     if merged is None:
@@ -117,9 +130,9 @@ def main():
 
     print(merged)
 
-    merged.to_csv(
-        OUTPUT_DIR / "merged_output.csv",
-        index=False
+    save_data(
+    merged,
+    OUTPUT_DIR / "merged_output.csv"
     )
 
     logging.info("Data pipeline finished successfully.")
